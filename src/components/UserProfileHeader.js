@@ -6,16 +6,12 @@ import {
   Text,
   SafeAreaView,
   Image,
-  Pressable,
+  TouchableOpacity,
 } from "react-native";
-import { Ionicons, SimpleLineIcons, Feather } from "@expo/vector-icons";
+import { Ionicons, SimpleLineIcons, Feather, Entypo } from "@expo/vector-icons";
 
 const UserProfileHeader = ({ user, isSubscribed, setIsSubscribed }) => {
   const router = useRouter();
-
-  if (!user) {
-    return <Text>User not found!</Text>;
-  }
 
   return (
     <View>
@@ -40,28 +36,42 @@ const UserProfileHeader = ({ user, isSubscribed, setIsSubscribed }) => {
             style={{ marginEnd: 10 }}
           />
 
-          <View>
-            <Text
-              style={{
-                ...styles.profileText,
-                marginBottom: 5,
-                fontSize: 20,
-                fontWeight: "500",
-              }}
-            >
-              {user.name}
-            </Text>
-            <Text
-              style={{ ...styles.profileText, fontSize: 12, fontWeight: "500" }}
-            >
-              1.4K Posts · 304.8K Likes · 1.34M Fans
-            </Text>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+          >
+            <View style={{marginEnd: 150}}>
+              <Text
+                style={{
+                  ...styles.profileText,
+                  marginBottom: 5,
+                  fontSize: 20,
+                  fontWeight: "500",
+                }}
+              >
+                {user.name}
+              </Text>
+              <Text
+                style={{
+                  ...styles.profileText,
+                  fontSize: 12,
+                  fontWeight: "500",
+                }}
+              >
+                1.4K Posts · 304.8K Likes · 1.34M Fans
+              </Text>
+            </View>
+
+            <Entypo name="dots-three-vertical" size={24} color="white" />
           </View>
         </SafeAreaView>
       </ImageBackground>
 
-      <View style={{ padding: 10 }}>
+      <View style={{ padding: 5, width: "100%" }}>
         {/* Profile Image */}
+
         <View
           style={{
             flexDirection: "row",
@@ -73,6 +83,7 @@ const UserProfileHeader = ({ user, isSubscribed, setIsSubscribed }) => {
         >
           <Image src={user.avatar} style={styles.userImage} />
 
+          {/* Header Buttons */}
           <View
             style={{
               flexDirection: "row",
@@ -80,20 +91,34 @@ const UserProfileHeader = ({ user, isSubscribed, setIsSubscribed }) => {
               justifyContent: "center",
             }}
           >
-            <Feather
-              name="star"
-              size={20}
-              color="black"
+            <View
               style={{
-                marginRight: 20,
-                borderWidth: 1,
-                borderColor: "gainsboro",
+                alignItems: "center",
+                borderWidth: 0.6,
                 borderRadius: 50,
-                padding: 15,
-                alignItems: 'center'
+                borderColor: "gainsboro",
+                padding: 13,
+                marginEnd: 10,
               }}
-            />
-            <SimpleLineIcons name="share-alt" size={24} color="#00aff0" />
+            >
+              <TouchableOpacity activeOpacity={0.3}>
+                <Feather name="star" size={24} color="#00aff0" />
+              </TouchableOpacity>
+            </View>
+
+            <View
+              style={{
+                alignItems: "center",
+                borderWidth: 0.6,
+                borderRadius: 50,
+                borderColor: "gainsboro",
+                padding: 13,
+              }}
+            >
+              <TouchableOpacity activeOpacity={0.3}>
+                <SimpleLineIcons name="share-alt" size={24} color="#00aff0" />
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
 
@@ -107,32 +132,36 @@ const UserProfileHeader = ({ user, isSubscribed, setIsSubscribed }) => {
           SUBSCRIPTION
         </Text>
 
-        <Pressable
-          onPress={() => setIsSubscribed(!isSubscribed)}
-          style={[
-            styles.button,
-            { backgroundColor: isSubscribed ? "white" : "#00aff0" },
-          ]}
-        >
-          <Text
+        {/* Subscribe Button */}
+        <View style={{ alignItems: "center", width: "100%" }}>
+          <TouchableOpacity
+            activeOpacity={0.8}
+            onPress={() => setIsSubscribed(!isSubscribed)}
             style={[
-              styles.buttonText,
-              { color: isSubscribed ? "#00aff0" : "white" },
+              styles.button,
+              { backgroundColor: isSubscribed ? "white" : "#00aff0" },
             ]}
           >
-            {isSubscribed ? "SUBSCRIBED" : "SUBSCRIBE"}
-          </Text>
-          <Text
-            style={[
-              styles.buttonText,
-              { color: isSubscribed ? "#00aff0" : "white" },
-            ]}
-          >
-            {user.subscriptionPrice == 0
-              ? "FOR FREE"
-              : `$${user.subscriptionPrice} / month`}
-          </Text>
-        </Pressable>
+            <Text
+              style={[
+                styles.buttonText,
+                { color: isSubscribed ? "#00aff0" : "white" },
+              ]}
+            >
+              {isSubscribed ? "SUBSCRIBED" : "SUBSCRIBE"}
+            </Text>
+            <Text
+              style={[
+                styles.buttonText,
+                { color: isSubscribed ? "#00aff0" : "white" },
+              ]}
+            >
+              {user.subscriptionPrice == 0
+                ? "FOR FREE"
+                : `$${user.subscriptionPrice} / month`}
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );
@@ -165,11 +194,13 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     borderColor: "gainsboro",
-    borderWidth: 1,
-    height: 50,
+    borderWidth: 0.6,
     borderRadius: 50,
     padding: 15,
     marginVertical: 10,
+    backgroundColor: "#00aff0",
+    width: "100%",
+    height: 55,
   },
   buttonText: {
     fontWeight: "600",

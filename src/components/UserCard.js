@@ -58,8 +58,8 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
   },
   userImage: {
-    width: 100,
-    height: 100,
+    width: 70,
+    height: 70,
     borderRadius: 100,
     borderWidth: 3,
     borderColor: "white",

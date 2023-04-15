@@ -1,65 +1,71 @@
-import { useRouter, useSearchParams } from "expo-router";
+import { useState } from "react";
+import { useSearchParams } from "expo-router";
 import {
-  ImageBackground,
+  FlatList,
   StyleSheet,
-  View,
   Text,
-  SafeAreaView,
+  TouchableOpacity,
+  View,
 } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import { FontAwesome5 } from "@expo/vector-icons";
 
 import users from "../../assests/data/users";
+import posts from "../../assests/data/posts";
+import UserProfileHeader from "../../src/components/UserProfileHeader";
+import Post from "../../src/components/Post";
 
 const ProfilePage = () => {
-  const router = useRouter();
+  const [isSubscribed, setIsSubscribed] = useState(false);
+
   const { id } = useSearchParams();
 
   const user = users.find((u) => u.id == id);
 
-  if (!user) {
-    return <Text>User not found!</Text>;
+  if (!isSubscribed) {
+    return (
+      <View style={{ flex: 1 }}>
+        <UserProfileHeader
+          user={user}
+          isSubscribed={isSubscribed}
+          setIsSubscribed={setIsSubscribed}
+        />
+
+        <View style={{ backgroundColor: "whitesmoke", alignItems: "center" }}>
+          <FontAwesome5 name="lock" size={55} color="gainsboro" />
+
+          <View style={{ width: "100%" , alignItems: 'center' }}>
+            <TouchableOpacity activeOpacity={0.8} style={styles.button}>
+              <Text
+                style={{
+                  color: "#fefefe",
+                  lineHeight: 20,
+                  fontSize: 14,
+                  textAlign: "center",
+                }}
+              >
+                SUBSCRIBE TO SEE USER'S POSTS
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+    );
   }
 
   return (
     <View>
-      <ImageBackground source={{ uri: user.coverImage }} style={styles.cover}>
-        <View style={styles.overlay} />
-
-        <SafeAreaView
-          style={{
-            marginHorizontal: 10,
-            marginVertical: 45,
-            flexDirection: "row",
-            alignItems: "center",
-          }}
-        >
-          <Ionicons
-            onPress={() => router.back()}
-            name="arrow-back"
-            size={28}
-            color="white"
-            style={{ marginEnd: 10 }}
+      <FlatList
+        data={posts}
+        renderItem={({ item }) => <Post post={item} />}
+        showsVerticalScrollIndicator={false}
+        ListHeaderComponent={() => (
+          <UserProfileHeader
+            user={user}
+            isSubscribed={isSubscribed}
+            setIsSubscribed={setIsSubscribed}
           />
-
-          <View>
-            <Text
-              style={{
-                ...styles.profileText,
-                marginBottom: 5,
-                fontSize: 20,
-                fontWeight: "500",
-              }}
-            >
-              {user.name}
-            </Text>
-            <Text
-              style={{ ...styles.profileText, fontSize: 12, fontWeight: "500" }}
-            >
-              1.4K Posts · 304.8K Likes · 1.34M Fans
-            </Text>
-          </View>
-        </SafeAreaView>
-      </ImageBackground>
+        )}
+      />
     </View>
   );
 };
@@ -67,15 +73,13 @@ const ProfilePage = () => {
 export default ProfilePage;
 
 const styles = StyleSheet.create({
-  cover: {
-    width: "100%",
-    height: 250,
-  },
-  overlay: {
-    backgroundColor: "rgba(0,0,0,0.5)",
-    ...StyleSheet.absoluteFillObject,
-  },
-  profileText: {
-    color: "white",
+  button: {
+    backgroundColor: "#00aff0",
+    padding: 15,
+    width: "95%",
+    height: 50,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 50,
   },
 });
